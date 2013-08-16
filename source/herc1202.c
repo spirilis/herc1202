@@ -20,8 +20,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "sci.h"
-
 /* Global variables, extern flash-stored arrays and internal/private functions. */
 xQueueHandle Herc1202RequestQueue;
 static uint8_t _x, _y;
