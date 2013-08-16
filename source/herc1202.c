@@ -38,20 +38,15 @@ extern const uint16_t Herc1202_ClearBuffer[];
 /* Initialize task & queue structure--can be run during main() before vTaskStartScheduler() */
 portBASE_TYPE Herc1202_Init(xSemaphoreHandle spiMutex)
 {
-	char *taskname;
-
 	/* Create the common request queue */
 	Herc1202RequestQueue = xQueueCreate(HERC1202_QUEUE_LENGTH, sizeof(Herc1202RequestStruct));
 	if (!Herc1202RequestQueue) {
 		return pdFALSE;
 	}
 
-	taskname = pvPortMalloc(configMAX_TASK_NAME_LEN);
-	strcpy(taskname, "HERC1202_SPI");
 	/* Start the Driver Task. */
-	if (pdPASS != xTaskCreate(Herc1202_DriverTask, (signed char *)taskname, 256, (void*)spiMutex, configMAX_PRIORITIES-2, NULL)) {
-		vPortFree(taskname);
-		//vQueueDelete(Herc1202RequestQueue);
+	if (pdPASS != xTaskCreate(Herc1202_DriverTask, (signed char*)"HERC1202_SPI", 256, (void*)spiMutex, configMAX_PRIORITIES-2, NULL)) {
+		vQueueDelete(Herc1202RequestQueue);
 		return pdFALSE;
 	}
 
